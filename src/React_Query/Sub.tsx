@@ -1,40 +1,44 @@
-import React from 'react'
-import { useMutation } from 'react-query'
+import React, { useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
 
 
 function Sub() {
     var Email = 'JohnDoe@gmail.com'
     var Password = 'Password123'
     var id = (new Date()).getTime()
-
     var daa:any = []
 
     const handleSubmit = async () => {
-        var res = await fetch('https://reactfirebasebackend-default-rtdb.firebaseio.com/userDataRecord_1.json')
-        var data = await res.json()
-        daa = data
-        console.log('Data ', daa)
-        // const res = await fetch('https://reactfirebasebackend-default-rtdb.firebaseio.com/userDataRecord_1.json',
-        //     {
-        //         method:'POST',
-        //         headers:{
-        //            'Content-Type':'application/json'
-        //         },
-        //         body:JSON.stringify({
-        //             Email,Password,id
-        //         })
-        //     })
-    }
+      var res =  await fetch('http://jsonplaceholder.typicode.com/users')
+      var info = await res.json()
+      return info
+  }
 
-  return (
+    const {isLoading,data,isError,error} = useQuery('My_hero',handleSubmit)
+   
+  if(isLoading){
+    return <h2>Loading ...</h2>
+  }
+
+  else if(isError){
+    return <h2>There's some kind of error</h2>
+  }
+
+  // console.log('D ',data)
+
+
+  // else{
+    return( 
     <>
         <div>Sub</div>
-        <button onClick={handleSubmit}>Submit</button>
-        <p>
-            {/* {daa.map((e:any) => e)} */}
-        </p>
+       <h2>{data?.map((e:any) => {return(
+        <>
+        <h2 key={e.name}>{e.name}</h2><br></br>
+        </>
+       )})}</h2>
     </>
   )
+  // }
 }
 
 export default Sub
